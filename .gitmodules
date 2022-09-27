@@ -1,0 +1,3 @@
+[submodule "redis-datasets"]
+	path = redis-datasets
+	url = git@github.com:redis-developer/redis-datasets.git
