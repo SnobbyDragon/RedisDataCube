@@ -3,9 +3,12 @@ import reactLogo from "./assets/react.svg";
 import axios from "axios";
 import "./App.css";
 
+type data = {
+  hello?: string;
+};
 function App() {
   const [count, setCount] = useState(0);
-  const [hello, setHello] = useState([{}]);
+  const [hello, setHello] = useState<Array<data>>([{}]);
 
   useEffect(() => {
     axios
