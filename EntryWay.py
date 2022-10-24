@@ -1,8 +1,23 @@
 import redis
 import sqlparse
+from bottle import route, run, template
 
 def setup():
-  return redis.Redis(host='localhost', port=6379, db=0)
+  return redis.Redis(host='localhost', port=6379, db=0, decode_responses=True)
+
+REDIS_INSTANCE = setup()
+
+@route('/api/v1/redis')
+def index():
+  val = REDIS_INSTANCE.get("hello")
+  rv = [{ "hello": val}]
+  print(rv)
+  return dict(data=rv)
+
+@route('/hello/<name>')
+def index(name):
+    return template('<b>Hello {{name}}</b>!', name=name)
+
 
 def query_redis(instance):
   print("Input SQL query or STOP to quit")
@@ -18,10 +33,9 @@ def query_redis(instance):
 
 
 def main():
-    redis_instance = setup()
     # test
-    redis_instance.set('hello', 'redis')
-    query_redis(redis_instance)
+    run(host='localhost', port=8080) 
+    # query_redis(redis_instance)
 
 if __name__ == "__main__":
     main()
