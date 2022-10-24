@@ -1,5 +1,5 @@
 import RedisClient as rc
-from bottle import route, run, template
+from bottle import route, run, template, post
 
 R_HOST='localhost'
 R_PORT=6379
@@ -13,6 +13,11 @@ def index():
   rv = [{ "hello": val}]
   print(rv)
   return dict(data=rv)
+
+@post('/api/v1/redis/<query>')
+def do_query(query):
+    print(query)
+    return "success"
 
 @route('/hello/<name>')
 def index(name):

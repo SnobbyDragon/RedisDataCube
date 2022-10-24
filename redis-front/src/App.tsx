@@ -6,9 +6,19 @@ import "./App.css";
 type data = {
   hello?: string;
 };
+
 function App() {
   const [count, setCount] = useState(0);
+  const [query, setQuery] = useState("");
   const [hello, setHello] = useState<Array<data>>([{}]);
+
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    axios
+      .post(`/redis/${query}`)
+      .then((response) => console.log(response))
+      .catch((err) => console.log(err));
+  };
 
   useEffect(() => {
     axios
@@ -33,6 +43,17 @@ function App() {
         <button onClick={() => setCount((count) => count + 1)}>
           count is {count}
         </button>
+        <br></br>
+        <form onSubmit={(e) => handleSubmit(e)}>
+          <input
+            id="query-input"
+            type={"search"}
+            placeholder="SELECT ..."
+            name="query"
+            onChange={(box) => setQuery(box.target.value)}
+          ></input>
+        </form>
+        {query.length === 0 ? <></> : <div>Query: {query}</div>}
         <p>
           Edit <code>src/App.tsx</code> and save to test HMR
         </p>
