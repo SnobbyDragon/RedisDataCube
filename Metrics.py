@@ -1,6 +1,6 @@
 import redis
 
-from EntryWay import setup
+from Router import setup
 
 def latency(instance):
 
