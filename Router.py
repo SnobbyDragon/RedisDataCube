@@ -17,8 +17,9 @@ def index():
 
 @get('/api/v1/redis/<query>')
 def do_query(query):
-    print(query)
-    return "success"
+    print(type(query))
+    translated = REDIS_INSTANCE.query_redis(query)
+    return translated
 
 @get('/api/v1/redis/keys')
 def index():
@@ -28,7 +29,6 @@ def index():
         if possible_key not in keys:
             keys.append(possible_key)
     return dict(data=keys)
-
 
 @route('/hello/<name>')
 def index(name):

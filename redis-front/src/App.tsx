@@ -10,20 +10,30 @@ type data = {
 function App() {
   const [count, setCount] = useState(0);
   const [query, setQuery] = useState("");
+  const [result, setResult] = useState("");
   const [hello, setHello] = useState<Array<any>>([{}]);
+  const [redisKeys, setRedisKeys] = useState<Array<string>>([]);
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    axios
-      .get(`/redis/${query}`)
-      .then((response) => console.log(response))
-      .catch((err) => console.log(err));
+    if (query.length > 0) {
+      axios
+        .get(`/redis/${query}`)
+        .then((response) => {
+          setResult(response.data);
+        })
+        .catch((err) => console.log(err));
+    }
   };
 
   useEffect(() => {
     axios
       .get("/redis")
       .then((response) => setHello(response.data.data))
+      .catch((err) => console.log(err));
+    axios
+      .get("/redis/keys")
+      .then((response) => setRedisKeys(response.data.data))
       .catch((err) => console.log(err));
   }, []);
 
@@ -40,6 +50,10 @@ function App() {
       <h1>Vite + React</h1>
       <div className="card">
         <div id="table">
+          <h1>Redis DB Keys</h1>
+          {redisKeys.map((str) => (
+            <b key={redisKeys.indexOf(str)}>{str}, </b>
+          ))}
           <table>
             <thead>
               <tr>
@@ -73,6 +87,7 @@ function App() {
           ></input>
         </form>
         {query.length === 0 ? <></> : <div>Query: {query}</div>}
+        {result.length === 0 ? <></> : <div>Result: {result}</div>}
         <p>
           Edit <code>src/App.tsx</code> and save to test HMR
         </p>
