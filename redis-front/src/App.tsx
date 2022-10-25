@@ -15,7 +15,7 @@ function App() {
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     axios
-      .post(`/redis/${query}`)
+      .get(`/redis/${query}`)
       .then((response) => console.log(response))
       .catch((err) => console.log(err));
   };
