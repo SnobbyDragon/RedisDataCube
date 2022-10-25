@@ -39,3 +39,12 @@
 .read-the-docs {
   color: #888;
 }
+
+div.table table {
+  padding-left: 50%;
+  padding-right: 50%;
+}
+
+tr:hover {
+  filter: drop-shadow(0 0 2em #61dafbaa);
+}

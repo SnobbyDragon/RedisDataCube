@@ -1,5 +1,6 @@
 import RedisClient as rc
 from bottle import route, run, template, post, get
+import re
 
 R_HOST='localhost'
 R_PORT=6379
@@ -18,6 +19,16 @@ def index():
 def do_query(query):
     print(query)
     return "success"
+
+@get('/api/v1/redis/keys')
+def index():
+    keys = []
+    for key in REDIS_INSTANCE.client.keys():
+        possible_key = re.sub(":[\d]+", "", key)
+        if possible_key not in keys:
+            keys.append(possible_key)
+    return dict(data=keys)
+
 
 @route('/hello/<name>')
 def index(name):

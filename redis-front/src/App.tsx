@@ -10,7 +10,7 @@ type data = {
 function App() {
   const [count, setCount] = useState(0);
   const [query, setQuery] = useState("");
-  const [hello, setHello] = useState<Array<data>>([{}]);
+  const [hello, setHello] = useState<Array<any>>([{}]);
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -39,7 +39,26 @@ function App() {
       </div>
       <h1>Vite + React</h1>
       <div className="card">
-        <h1>{hello[0].hello || "hello"}</h1>
+        <div id="table">
+          <table>
+            <thead>
+              <tr>
+                <td>Key</td>
+                <td>Value</td>
+              </tr>
+            </thead>
+            <tbody>
+              {hello.map((o, i) => {
+                return (
+                  <tr key={i}>
+                    <td>{Object.keys(o)}</td>
+                    <td>{o.hello}</td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
         <button onClick={() => setCount((count) => count + 1)}>
           count is {count}
         </button>
