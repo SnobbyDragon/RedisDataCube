@@ -24,7 +24,7 @@ def do_query(query):
 def index():
     keys = []
     for key in REDIS_INSTANCE.client.keys():
-        possible_key = re.sub(":[\d]+", "", key)
+        possible_key = re.sub(":\d+", "", key)
         if possible_key not in keys:
             keys.append(possible_key)
     return dict(data=keys)
