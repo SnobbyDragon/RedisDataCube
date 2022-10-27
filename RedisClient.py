@@ -22,7 +22,8 @@ class RedisClient:
       print(exception)
 
     # currently returns in string format, but maybe TODO: parse dictionary and display in table?
-    return self.cube_to_string(self.cube(*cube_params))
+    return self.cube(*cube_params)
+    # return self.cube_to_string(self.cube(*cube_params))
 
     # translated = self.translate_statement(statements[0])
     # return sqlparse.format(translated, reindent=True, keyword_case='upper')
