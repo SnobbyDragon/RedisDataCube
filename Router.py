@@ -17,9 +17,8 @@ def index():
 
 @get('/api/v1/redis/<query>')
 def do_query(query):
-    print(type(query))
-    translated = REDIS_INSTANCE.query_redis(query)
-    return translated
+    cubeText = REDIS_INSTANCE.query_redis(query)
+    return template('<pre>{{text}}</pre>', text=cubeText)
 
 @get('/api/v1/redis/keys')
 def index():
