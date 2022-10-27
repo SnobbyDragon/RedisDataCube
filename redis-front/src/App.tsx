@@ -1,30 +1,39 @@
 import { useEffect, useState } from "react";
-import reactLogo from "./assets/react.svg";
 import axios from "axios";
 import "./App.css";
+import Table from "./Components/Table";
 
 type data = {
   hello?: string;
 };
 
 function App() {
-  const [count, setCount] = useState(0);
   const [query, setQuery] = useState("");
   const [result, setResult] = useState("");
   const [hello, setHello] = useState<Array<any>>([{}]);
   const [redisKeys, setRedisKeys] = useState<Array<string>>([]);
+  const [waiting, setWaiting] = useState(false);
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (query.length > 0) {
-      axios
-        .get(`/redis/${query}`)
-        .then((response) => {
-          setResult(response.data);
-        })
-        .catch((err) => console.log(err));
+      const result = await axios.get(`/redis/${query}`);
+      setWaiting(true);
+      if (result.status === 200) {
+        setResult(result.data);
+        setWaiting(false);
+      } else {
+        console.log(result.request);
+      }
+      // .then((response) => {
+      //   setResult(response.data);
+      // })
+      // .catch((err) => console.log(err));
     }
   };
+
+  const columns = ["c1", "c2", "c3", "c4", "c5", "c6"];
+  const rows = [{ c1: "c1", c2: "c2", c3: "c3", c4: "c4", c5: "c5", c6: "c6" }];
 
   useEffect(() => {
     axios
@@ -38,22 +47,28 @@ function App() {
   }, []);
 
   return (
-    <div className="App">
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src="/vite.svg" className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://reactjs.org" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+    <div className="Addpp">
+      <h1>Redis Cuber</h1>
+      <div id="search-container">
+        <form onSubmit={(e) => handleSubmit(e)}>
+          <input
+            id="query-input"
+            type={"search"}
+            placeholder="SELECT ..."
+            name="query"
+            onChange={(box) => setQuery(box.target.value)}
+          ></input>
+        </form>
       </div>
-      <h1>Vite + React</h1>
       <div className="card">
+        {waiting ? (
+          <div>
+            <img src="../loading.gif"></img>
+          </div>
+        ) : (
+          <Table columns={columns} rows={rows} />
+        )}
         <div id="table">
-          <h1>Redis DB Keys</h1>
-          {redisKeys.map((str) => (
-            <b key={redisKeys.indexOf(str)}>{str}, </b>
-          ))}
           <table>
             <thead>
               <tr>
@@ -73,19 +88,7 @@ function App() {
             </tbody>
           </table>
         </div>
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
         <br></br>
-        <form onSubmit={(e) => handleSubmit(e)}>
-          <input
-            id="query-input"
-            type={"search"}
-            placeholder="SELECT ..."
-            name="query"
-            onChange={(box) => setQuery(box.target.value)}
-          ></input>
-        </form>
         {query.length === 0 ? <></> : <div>Query: {query}</div>}
         {result.length === 0 ? <></> : <div>Result: {result}</div>}
         <p>
