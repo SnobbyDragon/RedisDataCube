@@ -13,3 +13,15 @@ td, th {
 tr:nth-child(even) {
   background-color: #dddddd;
 }
+
+div#paginator {
+  display: flex;
+  justify-content: space-between;
+  flex-direction: row-reverse;
+  margin-bottom: 5px;
+}
+
+div#paginator > button#start-paginator-suite {
+  margin-right: 925px;
+  margin-left: 5px;
+}

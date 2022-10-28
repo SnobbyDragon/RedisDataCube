@@ -73,7 +73,3 @@ input[type="search"] {
   z-index: 1;
   position: relative;
 }
-
-tr:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
-}
