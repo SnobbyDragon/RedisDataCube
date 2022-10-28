@@ -9,6 +9,7 @@ function App() {
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    setApiData([]);
     if (query.length > 0) {
       const response = await axios.get(`/redis/${query}`);
       if (response.status === 200) {

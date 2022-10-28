@@ -5,6 +5,7 @@ table {
 }
 
 td, th {
+  font-family: arial, sans-serif;
   border: 1px solid #dddddd;
   text-align: left;
   padding: 8px;
@@ -24,4 +25,15 @@ div#paginator {
 div#paginator > button#start-paginator-suite {
   margin-right: 925px;
   margin-left: 5px;
+}
+
+button {
+  border-radius: 12px;
+  opacity: 0.6;
+  transition: 0.3s;
+}
+
+button:hover {
+  background-color: #d9534f;
+  opacity: 1;
 }
