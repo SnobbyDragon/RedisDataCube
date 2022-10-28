@@ -23,7 +23,7 @@ function App() {
   };
 
   return (
-    <div className="Addpp">
+    <div className="App">
       <h1>Redis Cuber</h1>
       <div id="search-container">
         <form onSubmit={(e) => handleSubmit(e)}>
