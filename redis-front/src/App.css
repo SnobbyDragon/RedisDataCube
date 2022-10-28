@@ -36,6 +36,14 @@
   padding: 2em;
 }
 
+#search-container {
+  display: flexbox;
+}
+
+#search-container form {
+  width: 100%;
+}
+
 .read-the-docs {
   color: #888;
 }
@@ -45,6 +53,32 @@ div.table table {
   padding-right: 50%;
 }
 
-tr:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
+input, button {
+  height: var(--height);
+  font-family: var(--font-fam);
+  border: 0;
+  color: var(--color-dark);
+  font-size: 1.8rem;
+}
+
+input[type="search"] {
+  outline: 0; 
+  width: 100%;
+  background: var(--color-light);
+  padding: 0 1.6rem;
+  border-radius: var(--rad);
+  appearance: none; 
+  transition: all var(--dur) var(--bez);
+  transition-property: width, border-radius;
+  z-index: 1;
+  position: relative;
+}
+
+div#glass {
+  opacity: .75;
+  transition: .3s;
+}
+
+div#glass:hover {
+  opacity: 1;
 }

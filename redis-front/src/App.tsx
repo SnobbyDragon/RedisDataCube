@@ -1,100 +1,59 @@
-import { useEffect, useState } from "react";
-import reactLogo from "./assets/react.svg";
+import { useState } from "react";
 import axios from "axios";
 import "./App.css";
-
-type data = {
-  hello?: string;
-};
+import Table from "./Components/Table";
+import RedisP from "./assets/redisearch.png";
 
 function App() {
-  const [count, setCount] = useState(0);
   const [query, setQuery] = useState("");
-  const [result, setResult] = useState("");
-  const [hello, setHello] = useState<Array<any>>([{}]);
-  const [redisKeys, setRedisKeys] = useState<Array<string>>([]);
+  const [searchEnabled, setSearchEnabled] = useState(false);
+  const [apiData, setApiData] = useState<Array<any>>([]);
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    setApiData([]);
     if (query.length > 0) {
-      axios
-        .get(`/redis/${query}`)
-        .then((response) => {
-          setResult(response.data);
-        })
-        .catch((err) => console.log(err));
+      const response = await axios.get(`/redis/${query}`);
+      if (response.status === 200) {
+        const data: Object = response.data.data;
+        for (const [key, value] of Object.entries(data)) {
+          setApiData((arr) => [...arr, value]);
+        }
+      } else {
+        console.log(response.request);
+      }
     }
   };
 
-  useEffect(() => {
-    axios
-      .get("/redis")
-      .then((response) => setHello(response.data.data))
-      .catch((err) => console.log(err));
-    axios
-      .get("/redis/keys")
-      .then((response) => setRedisKeys(response.data.data))
-      .catch((err) => console.log(err));
-  }, []);
-
   return (
     <div className="App">
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src="/vite.svg" className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://reactjs.org" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+      <h1>Redis Cuber</h1>
+      <div id="search-container">
+        {!searchEnabled ? (
+          <div id="glass">
+            <img src={RedisP} onClick={() => setSearchEnabled(true)}></img>
+          </div>
+        ) : (
+          <form onSubmit={(e) => handleSubmit(e)}>
+            <input
+              id="query-input"
+              type={"search"}
+              placeholder="SELECT ..."
+              name="query"
+              onChange={(box) => setQuery(box.target.value)}
+            ></input>
+          </form>
+        )}
       </div>
-      <h1>Vite + React</h1>
       <div className="card">
-        <div id="table">
-          <h1>Redis DB Keys</h1>
-          {redisKeys.map((str) => (
-            <b key={redisKeys.indexOf(str)}>{str}, </b>
-          ))}
-          <table>
-            <thead>
-              <tr>
-                <td>Key</td>
-                <td>Value</td>
-              </tr>
-            </thead>
-            <tbody>
-              {hello.map((o, i) => {
-                return (
-                  <tr key={i}>
-                    <td>{Object.keys(o)}</td>
-                    <td>{o.hello}</td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
-        </div>
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <br></br>
-        <form onSubmit={(e) => handleSubmit(e)}>
-          <input
-            id="query-input"
-            type={"search"}
-            placeholder="SELECT ..."
-            name="query"
-            onChange={(box) => setQuery(box.target.value)}
-          ></input>
-        </form>
-        {query.length === 0 ? <></> : <div>Query: {query}</div>}
-        {result.length === 0 ? <></> : <div>Result: {result}</div>}
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
+        {apiData.length > 0 && <Table data={apiData} />}
+        {searchEnabled ? <div>Query: {query}</div> : <></>}
+        {searchEnabled && apiData.length > 0 ? (
+          <a href="#top">Go to top</a>
+        ) : (
+          <></>
+        )}
       </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
     </div>
   );
 }

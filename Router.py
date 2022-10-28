@@ -17,9 +17,14 @@ def index():
 
 @get('/api/v1/redis/<query>')
 def do_query(query):
-    print(type(query))
-    translated = REDIS_INSTANCE.query_redis(query)
-    return translated
+    cubeDict = REDIS_INSTANCE.query_redis(query)
+    return dict(data=cubeDict)
+
+@get('/api/v1/redis/as_text/<query>')
+def do_query(query):
+    cubeDict = REDIS_INSTANCE.query_redis(query)
+    cubeText = REDIS_INSTANCE.cube_to_string(cubeDict)
+    return template('<pre>{{cubeText}}</pre>', cubeText=cubeText)
 
 @get('/api/v1/redis/keys')
 def index():
