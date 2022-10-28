@@ -1,14 +1,33 @@
-import React from "react";
-import { useReactTable } from "@tanstack/react-table";
+import "./Table.css";
 
 type props = {
-  columns: Array<String>;
-  rows: Array<Map<String, String>>;
+  data: Array<any>;
+};
+
+type Tr = {
+  row: Object;
+};
+
+const TableRow = (props: Tr) => {
+  const row = props.row;
+  return (
+    <tr>
+      {Object.values(row).map((rowData) => (
+        <td>{rowData}</td>
+      ))}
+    </tr>
+  );
 };
 
 const Table = (props: props) => {
-  const columns: ColumnDef<TData> = props.columns;
-  const table = useReactTable();
+  const data = props.data;
+  const columns = Object.keys(data[0]);
+  console.log(columns);
+  // const columnHelper = createColumnHelper();
+  // const columns = Object.keys(props.data[0]).map(key => {
+  //   columnHelper.accessor
+  // })
+  // const table = useReactTable({props.data, });
   // const columns: Array<String> = props.columns;
   // const rows: Array<Map<String, String>> = props.rows;
   return (
@@ -19,32 +38,16 @@ const Table = (props: props) => {
             {columns.map((column) => (
               <td>{column}</td>
             ))}
-            <td>Key</td>
-            <td>Value</td>
           </tr>
         </thead>
         <tbody>
-          {rows.map((row, i) => {
-            return (
-              <tr key={i}>
-                {[row.values()].map((rowData) => (
-                  <td>{rowData}</td>
-                ))}
-                <td></td>
-              </tr>
-            );
-          })}
+          {data.map((row) => (
+            <TableRow row={row} />
+          ))}
         </tbody>
       </table>
     </div>
   );
 };
-// {rows.map((row, i) => {
-//   <tr key={i}>
-//   {[...row.values()].forEach(data => {
-//     return <td>{data}</td>
-//   })}
-// })}
-// </tr>
 
 export default Table;

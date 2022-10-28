@@ -9,7 +9,7 @@ type data = {
 
 function App() {
   const [query, setQuery] = useState("");
-  const [result, setResult] = useState("");
+  const [apiData, setApiData] = useState<Array<any>>([]);
   const [hello, setHello] = useState<Array<any>>([{}]);
   const [redisKeys, setRedisKeys] = useState<Array<string>>([]);
   const [waiting, setWaiting] = useState(false);
@@ -17,23 +17,19 @@ function App() {
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (query.length > 0) {
-      const result = await axios.get(`/redis/${query}`);
+      const response = await axios.get(`/redis/${query}`);
       setWaiting(true);
-      if (result.status === 200) {
-        setResult(result.data);
+      if (response.status === 200) {
+        const data: Object = response.data.data;
+        for (const [key, value] of Object.entries(data)) {
+          setApiData((arr) => [...arr, value]);
+        }
         setWaiting(false);
       } else {
-        console.log(result.request);
+        console.log(response.request);
       }
-      // .then((response) => {
-      //   setResult(response.data);
-      // })
-      // .catch((err) => console.log(err));
     }
   };
-
-  const columns = ["c1", "c2", "c3", "c4", "c5", "c6"];
-  const rows = [{ c1: "c1", c2: "c2", c3: "c3", c4: "c4", c5: "c5", c6: "c6" }];
 
   useEffect(() => {
     axios
@@ -61,36 +57,17 @@ function App() {
         </form>
       </div>
       <div className="card">
-        {waiting ? (
+        {apiData.length > 0 && <Table data={apiData} />}
+        {/* {waiting ? (
           <div>
             <img src="../loading.gif"></img>
           </div>
         ) : (
           <Table columns={columns} rows={rows} />
-        )}
-        <div id="table">
-          <table>
-            <thead>
-              <tr>
-                <td>Key</td>
-                <td>Value</td>
-              </tr>
-            </thead>
-            <tbody>
-              {hello.map((o, i) => {
-                return (
-                  <tr key={i}>
-                    <td>{Object.keys(o)}</td>
-                    <td>{o.hello}</td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
-        </div>
+        )} */}
         <br></br>
         {query.length === 0 ? <></> : <div>Query: {query}</div>}
-        {result.length === 0 ? <></> : <div>Result: {result}</div>}
+        {/* {result.length === 0 ? <></> : <div>Result: {result}</div>} */}
         <p>
           Edit <code>src/App.tsx</code> and save to test HMR
         </p>
