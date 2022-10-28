@@ -73,3 +73,12 @@ input[type="search"] {
   z-index: 1;
   position: relative;
 }
+
+div#glass {
+  opacity: .75;
+  transition: .3s;
+}
+
+div#glass:hover {
+  opacity: 1;
+}
