@@ -1,14 +1,28 @@
-import redis
+import RedisClient as rc
+import time
+from statistics import mean, stdev
 
-from Router import setup
+R_HOST='localhost'
+R_PORT=6379
+R_DB=0
 
-def latency(instance):
+REDIS_INSTANCE = rc.RedisClient(host=R_HOST, port=R_PORT, db_num=R_DB)
+
+def latency(instance, query, num_iterations=10):
 
     #no latency commands from redis are implemented in redis-py
     #use a timer from python and calculate time from query inputted to query outputted
     #could include total latency, query parsing latency, cubing latency
 
-    return 0
+    latencies = [0]*num_iterations
+
+    for i in range(num_iterations):
+        start_time = time.time()
+        instance.query_redis(query)
+        end_time = time.time()
+        latencies[i] = end_time - start_time
+
+    return mean(latencies), min(latencies), max(latencies), stdev(latencies)
 
 def memory(instance):
    
@@ -59,9 +73,13 @@ def check_metrics(instance):
 
 def main():
 
-    redis_instance = setup()
+    # 'SELECT AVG(rating), release_year, genre FROM movie GROUP BY CUBE(release_year, genre); query for movies dataset
+    # 'SELECT AVG(last_login), country, gender FROM u GROUP BY CUBE(country, gender);' query for users dataset ('users' and 'use' are keywords in SQL so not allowed)
+    # 'SELECT AVG(height), STDEV(num_whiskers), eye_color, fur_color FROM cat GROUP BY CUBE(eye_color, fur_color);' query for generated cat data
+
+    print(latency(REDIS_INSTANCE, 'SELECT AVG(height), STDEV(num_whiskers), eye_color, fur_color FROM cat GROUP BY CUBE(eye_color, fur_color);', 10))
     
-    check_metrics(redis_instance)
+    # check_metrics(redis_instance)
 
 if __name__ == "__main__":
     main()

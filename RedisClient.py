@@ -21,7 +21,6 @@ class RedisClient:
     except ValueError as exception:
       print(exception)
 
-    # currently returns in string format, but maybe TODO: parse dictionary and display in table?
     return self.cube(*cube_params)
     # return self.cube_to_string(self.cube(*cube_params))
 
