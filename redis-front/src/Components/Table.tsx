@@ -178,7 +178,7 @@ const Table = (props: props) => {
           {String.fromCodePoint(8592)}
         </button>
       </div>
-      <table>
+      <table className="styled-table">
         <thead>
           <tr>
             {columns.map((column, i) => (
