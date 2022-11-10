@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "./Table.css";
 import Fuse from "fuse.js";
 
@@ -23,6 +23,7 @@ const TableRow = (props: Tr) => {
   );
 };
 
+// maybe make 2 types of tables: 1 being an unsearched one and one being the searched table w/ different paginator methods
 const Table = (props: props) => {
   const data = props.data;
   const columns = Object.keys(data[0]);
@@ -74,7 +75,46 @@ const Table = (props: props) => {
     data.forEach((entry) => {
       searched.push(entry.item);
     });
-    setDataSlice(searched);
+    // setDataSlice(searched);
+    usePaginatorFromSearch(pageSize, searched);
+  };
+
+  const usePaginatorFromSearch = (numRecords: number, results: any[]) => {
+    switch (numRecords) {
+      case Infinity: {
+        setCurrentPage(1);
+        setPageSize(Infinity);
+        let slice = results;
+        setDataSlice(slice);
+        // setFuse(new Fuse(slice, { keys: columns }));
+        break;
+      }
+      case 10: {
+        setCurrentPage(1);
+        setPageSize(10);
+        setNumPages(Math.ceil(data.length / 10));
+        let slice = results.slice(0, 10);
+        setDataSlice(slice);
+        // setFuse(new Fuse(slice, { keys: columns }));
+        break;
+      }
+      case 100: {
+        setCurrentPage(1);
+        setPageSize(100);
+        setNumPages(Math.ceil(data.length / 100));
+        let slice = results.slice(0, 100);
+        setDataSlice(slice);
+        // setFuse(new Fuse(slice, { keys: columns }));
+        break;
+      }
+      default: {
+        setCurrentPage(1);
+        setPageSize(Infinity);
+        let slice = results;
+        setDataSlice(slice);
+        // setFuse(new Fuse(slice, { keys: columns }));
+      }
+    }
   };
 
   const usePaginator = (numRecords: number) => {
@@ -84,7 +124,7 @@ const Table = (props: props) => {
         setPageSize(Infinity);
         let slice = props.data;
         setDataSlice(slice);
-        setFuse(new Fuse(slice, { keys: columns }));
+        // setFuse(new Fuse(slice, { keys: columns }));
         break;
       }
       case 10: {
@@ -93,7 +133,7 @@ const Table = (props: props) => {
         setNumPages(Math.ceil(data.length / 10));
         let slice = props.data.slice(0, 10);
         setDataSlice(slice);
-        setFuse(new Fuse(slice, { keys: columns }));
+        // setFuse(new Fuse(slice, { keys: columns }));
         break;
       }
       case 100: {
@@ -102,7 +142,7 @@ const Table = (props: props) => {
         setNumPages(Math.ceil(data.length / 100));
         let slice = props.data.slice(0, 100);
         setDataSlice(slice);
-        setFuse(new Fuse(slice, { keys: columns }));
+        // setFuse(new Fuse(slice, { keys: columns }));
         break;
       }
       default: {
@@ -110,7 +150,7 @@ const Table = (props: props) => {
         setPageSize(Infinity);
         let slice = props.data;
         setDataSlice(slice);
-        setFuse(new Fuse(slice, { keys: columns }));
+        // setFuse(new Fuse(slice, { keys: columns }));
       }
     }
   };
@@ -178,7 +218,7 @@ const Table = (props: props) => {
           {String.fromCodePoint(8592)}
         </button>
       </div>
-      <table>
+      <table className="styled-table">
         <thead>
           <tr>
             {columns.map((column, i) => (
