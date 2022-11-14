@@ -32,38 +32,6 @@ const Table = (props: props) => {
   const [numPages, setNumPages] = useState(props.data.length);
   const [fuse, setFuse] = useState(new Fuse(dataSlice, { keys: columns }));
 
-  // const clickHeader = (
-  //   column: string,
-  //   e: React.MouseEvent<HTMLTableDataCellElement, MouseEvent>
-  // ) => {
-  //   const header = e.currentTarget;
-  //   let columnSortIdParts = header.id.split("-");
-  //   let sortType = "";
-  //   console.log(
-  //     dataSlice.sort((a, b) => {
-  //       console.log(a.genre);
-  //       a.genre - b.genre;
-  //     })
-  //   );
-  //   switch (columnSortIdParts[1]) {
-  //     case "unsorted":
-  //       sortType = "asc";
-  //       setDataSlice((old) => old.sort((a, b) => a[column] - b[column]));
-  //       break;
-  //     case "asc":
-  //       sortType = "desc";
-  //       setDataSlice((old) => old.sort((a, b) => b[column] - a[column]));
-  //       break;
-  //     default:
-  //       sortType = "unsorted";
-  //       usePaginator(pageSize);
-  //       break;
-  //   }
-  //   console.log(sortType);
-  //   columnSortIdParts[1] = sortType;
-  //   header.id = columnSortIdParts.join("-");
-  // };
-
   const searchFor = (search: string) => {
     if (search.length === 0) {
       usePaginator(pageSize);

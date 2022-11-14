@@ -61,6 +61,15 @@ input, button {
   font-size: 1.8rem;
 }
 
+.error-msg {
+  color: red;
+}
+
+input.error-box {
+  border: 2px solid red;
+  border-color: red;
+}
+
 input[type="search"] {
   outline: 0; 
   width: 100%;
