@@ -137,7 +137,6 @@ const Table = (props: props) => {
             searchFor(box.target.value);
           }}
         ></input>
-        {/* </form> */}
         <button id="start-paginator-suite" onClick={() => moveForward()}>
           {String.fromCodePoint(8594)}
         </button>
@@ -150,13 +149,7 @@ const Table = (props: props) => {
         <thead>
           <tr>
             {columns.map((column, i) => (
-              <td
-                key={i}
-                // onClick={(e) => clickHeader(column, e)}
-                // id={`${column}-unsorted`}
-              >
-                {column}
-              </td>
+              <td key={i}>{column}</td>
             ))}
           </tr>
         </thead>

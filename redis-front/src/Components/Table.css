@@ -48,7 +48,7 @@ button:hover {
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
 }
 .styled-table thead tr {
-    background-color: #980500;
+    background-color: #d82c20;
     color: #ffffff;
     text-align: left;
 }
@@ -61,9 +61,9 @@ button:hover {
 }
 
 .styled-table tbody tr:last-of-type {
-    border-bottom: 2px solid #980500;
+    border-bottom: 2px solid #d82c20;
 }
 .styled-table tbody tr :hover{
     font-weight: bold;
-    color: #980500;
+    color: #d82c20;
 }
