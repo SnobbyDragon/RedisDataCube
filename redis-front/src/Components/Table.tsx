@@ -127,7 +127,6 @@ const Table = (props: props) => {
         <button onClick={() => usePaginator(Infinity)}>All</button>
         <button onClick={() => usePaginator(100)}>100</button>
         <button onClick={() => usePaginator(10)}>10</button>
-        {/* <form onSubmit={(e) => searchFor(e)}> */}
         <input
           id="query-input"
           type={"search"}
