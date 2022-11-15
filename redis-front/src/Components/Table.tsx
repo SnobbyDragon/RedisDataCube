@@ -1,5 +1,6 @@
 import { useState } from "react";
 import "./Table.css";
+import Fuse from "fuse.js";
 
 type props = {
   data: Array<any>;
@@ -23,36 +24,62 @@ const TableRow = (props: Tr) => {
 };
 
 const Table = (props: props) => {
+  const data = props.data;
+  const columns = Object.keys(data[0]);
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(Infinity);
   const [dataSlice, setDataSlice] = useState(props.data);
   const [numPages, setNumPages] = useState(props.data.length);
-  const data = props.data;
-  const columns = Object.keys(data[0]);
+  const [fuse, setFuse] = useState(new Fuse(dataSlice, { keys: columns }));
+
+  const searchFor = (search: string) => {
+    if (search.length === 0) {
+      usePaginator(pageSize);
+      return;
+    }
+    const data = fuse.search(search);
+    let searched: any[] = [];
+    data.forEach((entry) => {
+      searched.push(entry.item);
+    });
+    setDataSlice(searched);
+  };
 
   const usePaginator = (numRecords: number) => {
     switch (numRecords) {
-      case Infinity:
+      case Infinity: {
         setCurrentPage(1);
         setPageSize(Infinity);
-        setDataSlice(props.data);
+        let slice = props.data;
+        setDataSlice(slice);
+        setFuse(new Fuse(slice, { keys: columns }));
         break;
-      case 10:
+      }
+      case 10: {
         setCurrentPage(1);
         setPageSize(10);
         setNumPages(Math.ceil(data.length / 10));
-        setDataSlice(props.data.slice(0, 10));
+        let slice = props.data.slice(0, 10);
+        setDataSlice(slice);
+        setFuse(new Fuse(slice, { keys: columns }));
         break;
-      case 100:
+      }
+      case 100: {
         setCurrentPage(1);
         setPageSize(100);
         setNumPages(Math.ceil(data.length / 100));
-        setDataSlice(props.data.slice(0, 100));
+        let slice = props.data.slice(0, 100);
+        setDataSlice(slice);
+        setFuse(new Fuse(slice, { keys: columns }));
         break;
-      default:
+      }
+      default: {
         setCurrentPage(1);
         setPageSize(Infinity);
-        setDataSlice(props.data);
+        let slice = props.data;
+        setDataSlice(slice);
+        setFuse(new Fuse(slice, { keys: columns }));
+      }
     }
   };
 
@@ -62,7 +89,9 @@ const Table = (props: props) => {
       const startOfSlice = data.indexOf(dataSlice[0]) - pageSize;
       const endOfSlice = data.indexOf(dataSlice.at(-1)) - pageSize + 1;
 
-      setDataSlice(data.slice(startOfSlice, endOfSlice));
+      const slice = data.slice(startOfSlice, endOfSlice);
+      setDataSlice(slice);
+      setFuse(new Fuse(slice, { keys: columns }));
 
       if (currentPage <= 1) {
         usePaginator(pageSize);
@@ -76,7 +105,9 @@ const Table = (props: props) => {
       const startOfSlice = data.indexOf(dataSlice[0]) + pageSize;
       const endOfSlice = data.indexOf(dataSlice.at(-1)) + pageSize + 1;
 
-      setDataSlice(data.slice(startOfSlice, endOfSlice));
+      const slice = data.slice(startOfSlice, endOfSlice);
+      setDataSlice(slice);
+      setFuse(new Fuse(slice, { keys: columns }));
 
       if (currentPage >= numPages) {
         usePaginator(pageSize);
@@ -96,6 +127,15 @@ const Table = (props: props) => {
         <button onClick={() => usePaginator(Infinity)}>All</button>
         <button onClick={() => usePaginator(100)}>100</button>
         <button onClick={() => usePaginator(10)}>10</button>
+        <input
+          id="query-input"
+          type={"search"}
+          placeholder="Search for a record"
+          name="search"
+          onChange={(box) => {
+            searchFor(box.target.value);
+          }}
+        ></input>
         <button id="start-paginator-suite" onClick={() => moveForward()}>
           {String.fromCodePoint(8594)}
         </button>
@@ -104,7 +144,7 @@ const Table = (props: props) => {
           {String.fromCodePoint(8592)}
         </button>
       </div>
-      <table>
+      <table className="styled-table">
         <thead>
           <tr>
             {columns.map((column, i) => (
